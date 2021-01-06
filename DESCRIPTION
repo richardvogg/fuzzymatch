@@ -7,7 +7,7 @@ Description: Allows you to remove inexact matches (e.g. Rstudio, RStudio, Rstdui
 Encoding: UTF-8
 LazyData: true
 Depends:
-  dplyr
-Imports: 
-  plyr,
+  dplyr,
   stringdist
+Imports: 
+  plyr
