@@ -3,12 +3,19 @@
 fuzzy_dedupes <- function(vec, find_cutoff=FALSE, cutoff_distance=0.06) {
   wordcount <- vec %>%
     tibble(txt=vec) %>%
-    dplyr::count(txt,sort=T)
+    dplyr::count(txt, sort=T)
 
   words <- wordcount$txt
 
+  # To not replace low frequency words with other low frequency words,
+  # we have to find a minimum frequency to make a word a candidate.
+  # For now I will manually set this to 3, but some thought should go into this.
+
+  #Find the index of the last string that appears at least 3 times
+  t <- Position(function(x) x < 3, wordcount$n) - 1
+
   out <- sapply(seq_along(words)[-1],function(i) {
-    dist2 <- stringdist(words[i],words[1:i-1],method='jw',p=0.1)
+    dist2 <- stringdist(words[i],words[1:min(t, i-1)],method='jw',p=0.1)
 
     best_fit <- which.min(dist2)
     similarity2 <- min(dist2)
